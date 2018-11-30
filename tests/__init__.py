@@ -24,11 +24,13 @@ Get_luci_annotation_cmd="Get_loci_annotation -out "+path_to_dir+"/tests/data -gt
 print(Get_luci_annotation_cmd)
 os.system(Get_luci_annotation_cmd) 
 
-
 Paired_End_Mod_cmd="Pre_Process -bam "+bam_file_HS+","+bam_file_UN+" -ref "+luci
 print(Paired_End_Mod_cmd)
 os.system(Paired_End_Mod_cmd) 
- 
+
+Paired_End_Mod_cmd="Pre_Process -ds 200 -bam "+bam_file_HS+","+bam_file_UN+" -ref "+luci
+print(Paired_End_Mod_cmd)
+os.system(Paired_End_Mod_cmd) 
 
 Get_DoGs_cmd="Get_DoGs -out "+path_to_dir+"/tests/data -bam "+bam_file_sorted+" -a "+luci+" -suff HS "
 print(Get_DoGs_cmd)

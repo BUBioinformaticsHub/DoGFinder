@@ -49,6 +49,7 @@ def main():
     parser.add_argument('-ref', action='store', dest='ref', help='Reference .bed annotation file for strandness check (can be loci_annotation.bed file)',type=str)
     parser.add_argument('-Q', action='store', dest='core', help='Core number usage', default=1,type=int)
     parser.add_argument('-out', action='store', dest='out', help='list of output path seperated by ,',type=str)
+    parser.add_argument('-ds', action='store', dest='downsample_n', help='downsample to N reads',type=int)
 
     usr_input = parser.parse_args() 
     path_bam=usr_input.readspath 
@@ -158,16 +159,20 @@ def main():
             PP='Paired-Ended,'
         print((na+" : "+PP+" "+st+" with "+str(cc)+" mapped Mreads"))
 
-    if len(bam_names)<=1:
-        print('Only one bam file, No need to downsample...exiting')
-        sys.exit()
+    if len(bam_names)<=1 and usr_input.downsample_n is None :
+        print('Only one bam file and no user specified downsample number, no need to downsample...exiting')
+        sys.exit(1)
 
 ############################################################################### Downsampling
-    reads_min_count=min(reads_count)
-    loc=reads_count.index(min(reads_count))
     bam_names_new=bam_names
+    if usr_input.downsample_n is not None :
+        reads_min_count = usr_input.downsample_n/1e6
+        print(("Downsampling to user specified count: %s Mreads " %(reads_min_count)))
+    else :
+        reads_min_count=min(reads_count)
+        loc=reads_count.index(min(reads_count))
 
-    print(("Bam file: %s has smallest number of mapped reads: %s Mreads " %(bam_names_new[loc],str(reads_min_count))))
+        print(("Bam file: %s has smallest number of mapped reads: %s Mreads " %(bam_names_new[loc],str(reads_min_count))))
     print("Downsampling... ") 
     a=bam_names_new
     tasks_to_accomplish = Queue()
