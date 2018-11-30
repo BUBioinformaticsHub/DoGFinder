@@ -278,7 +278,7 @@ def Downsample(k,path_bam,output_path,reads_min_count):
 	string=str(s)
 	s=string.split('.')[1]
 
-	if reads_count==reads_min_count:
+	if reads_count<=reads_min_count:
 		shutil.copy2(path_bam, path_new_sort)
 		#os.rename(path_bam, path_new_sort)
 		pysam.index(path_new_sort)
