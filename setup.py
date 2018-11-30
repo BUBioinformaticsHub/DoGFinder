@@ -8,10 +8,10 @@ class CustomInstallCommand(install):
     """Customized setuptools install command - prints a friendly greeting."""
     def run(self):
 
-        python_ver=sys.version
-        if python_ver[0]=='3':
-            print ("Error: you are using python 3, should be using python 2")
-            sys.exit()
+        #python_ver=sys.version
+        #if python_ver[0]=='3':
+        #    print ("Error: you are using python 3, should be using python 2")
+        #    sys.exit()
         bed_strng=os.popen('bedtools --version').read()
         if bed_strng.find("command not found")!=-1:
             print ("Warning: Couldn't find bedtools on path")

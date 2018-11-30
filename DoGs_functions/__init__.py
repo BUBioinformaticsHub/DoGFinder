@@ -1,5 +1,4 @@
-#!/usr/bin/env python2
-from __future__ import division
+
 import pybedtools
 import numpy as np
 import numpy 
@@ -11,7 +10,7 @@ import os.path
 import argparse
 import subprocess
 import shutil
-import commands
+import subprocess
 from multiprocessing import Lock, Process, Queue, current_process, cpu_count
 # Function to create annotation file later to be used for bedtools coverage
 # create annotation for coverage: for window size coverage:
@@ -95,7 +94,7 @@ def Create_cov_annotation_tot(window, new_ann,zero_ref,max_dog_length ):
 #This function return the DoGs that have ended and the ones for next loop:
 def DoGs_annotation( df_annotation_combine_windows_coverage,window,wind_cut,df_annotation,moving_window_size_ds,new_ann,zero_ref,df_max_dog_length,new_old,max_id_k,max_id):
 
-	df_annotation_combine_windows_coverage['names'], df_annotation_combine_windows_coverage['id'] = zip(*df_annotation_combine_windows_coverage[3].map(lambda x: x.split('@')))
+	df_annotation_combine_windows_coverage['names'], df_annotation_combine_windows_coverage['id'] = list(zip(*df_annotation_combine_windows_coverage[3].map(lambda x: x.split('@'))))
 	df_annotation_combine_windows_coverage.id = df_annotation_combine_windows_coverage.id.astype(int)
 	df_annotation_cov = pd.DataFrame({'names': df_annotation_combine_windows_coverage['names'], 'id' : df_annotation_combine_windows_coverage['id'],'coverage' : 	df_annotation_combine_windows_coverage[9]})
 	df_DoG_annotation_trans=df_annotation_cov.pivot(index='names', columns='id',values='coverage');
@@ -155,7 +154,7 @@ def Examine_bam(bam_files_names,ref_ann):
 	cmd = 'infer_experiment.py -r '+ref_ann+' -i '+bam_files_names
 	p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 	out, err = p.communicate()
-	result = out.split('\n')
+	result = out.decode().split('\n')
 	count=0;
 	S= numpy.zeros(shape=(3,1))
 	i=1;
@@ -193,9 +192,9 @@ def PE_Mod(PE,strand,path_bam,output_path):
 		base_name=os.path.basename(path_bam)    
 		out_name=output_path+"/"+base_name.split(".bam")[0]+".sorted_PE.bam";
 		infile = pysam.AlignmentFile(path_bam, "rb")
-		sam_strng=commands.getstatusoutput('samtools')
+		sam_strng=subprocess.getstatusoutput('samtools')
 		temp=sam_strng[1].split("Version:")[1][:7]
-		sam_version=int(filter(str.isdigit, temp))
+		sam_version=int(list(filter(str.isdigit, temp)))
 		if sam_version==119:
 			outfile = pysam.AlignmentFile(output_path+"/"+base_name.split(".bam")[0]+"_temp.bam", "wb", template=infile)
 		else:
@@ -251,7 +250,7 @@ def count_reads(path_bam,output_path):
 	path_new_sort=output_path+"/"+base_name.split(".bam")[0]+".sorted.bam";
 
 	if  not(os.path.isfile(path_bam+".bai")):
-	        print "No index file at : ",path_bam+".bai... Sorting and indexing..."
+	        print("No index file at : ",path_bam+".bai... Sorting and indexing...")
 	        pysam.sort("-O", "BAM","-T",path_temp,"-o",path_new_sort,path_bam )
 	        pysam.index(path_new_sort)
 	        path_bam=path_new_sort
