@@ -1,5 +1,0 @@
-pybedtools
-numpy
-pandas
-pysam
-RSeQC

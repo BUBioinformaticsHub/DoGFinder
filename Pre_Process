@@ -72,7 +72,7 @@ def main():
             sys.exit()
         for k in range(0,len(out_list)):
             if  not(os.path.exists(out_list[k])):
-                print("No output directory at : ",out_list[k])
+                print(("No output directory at : ",out_list[k]))
                 sys.exit()
     
     if path_bam is None:
@@ -89,13 +89,13 @@ def main():
 
     for k in range(0,len(bam_files_names)):
         if  not(os.path.isfile(bam_files_names[k])):
-            print("No reads file in : ",bam_files_names[k])
+            print(("No reads file in : ",bam_files_names[k]))
             sys.exit()
 
 
     print("\n-----------------------------------------------------Pre_Process-------------------------------------------------------------------------")
-    print("Ref. file: %s"%(ref_ann)) 
-    print("Cores available: %s Cores usage: %s"%(str(cpu_count()),str(cores))) 
+    print(("Ref. file: %s"%(ref_ann))) 
+    print(("Cores available: %s Cores usage: %s"%(str(cpu_count()),str(cores)))) 
 
 
 #    reads_count = [None] * len(bam_files_names)
@@ -156,7 +156,7 @@ def main():
             PP='Not Paired-End,'
         else:
             PP='Paired-Ended,'
-        print(na+" : "+PP+" "+st+" with "+str(cc)+" mapped Mreads")
+        print((na+" : "+PP+" "+st+" with "+str(cc)+" mapped Mreads"))
 
     if len(bam_names)<=1:
         print('Only one bam file, No need to downsample...exiting')
@@ -167,7 +167,7 @@ def main():
     loc=reads_count.index(min(reads_count))
     bam_names_new=bam_names
 
-    print("Bam file: %s has smallest number of mapped reads: %s Mreads " %(bam_names_new[loc],str(reads_min_count)))
+    print(("Bam file: %s has smallest number of mapped reads: %s Mreads " %(bam_names_new[loc],str(reads_min_count))))
     print("Downsampling... ") 
     a=bam_names_new
     tasks_to_accomplish = Queue()
@@ -204,7 +204,7 @@ def main():
         cc=tasks_out_count.get()
 
 
-        print(na+" : after downsample "+str(cc)+" mapped Mreads")
+        print((na+" : after downsample "+str(cc)+" mapped Mreads"))
     return True
 
 if __name__ == '__main__':

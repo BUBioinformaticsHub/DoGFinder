@@ -21,7 +21,7 @@ dog_ann_names=path.split(",")
 
 for k in range(0,len(dog_ann_names)):
     if  not(os.path.isfile(dog_ann_names[k])):
-        print("No DoG annotation file in : ",dog_ann_names[k])
+        print(("No DoG annotation file in : ",dog_ann_names[k]))
         sys.exit()
 
 if path_out is None:
@@ -33,7 +33,7 @@ if path_out[-1]=='/' and len(path_out)>0:
 
 
 print("\n-----------------------------------------------------Union_DoGs_annotation-------------------------------------------------------------------------")
-print("Output will be at: %s"%(path_out+"/")) 
+print(("Output will be at: %s"%(path_out+"/"))) 
 
 df_ann_annot= pd.DataFrame()
 
@@ -47,16 +47,16 @@ for k in range(0,len(dog_ann_names)):
 
 trans_annot=pybedtools.BedTool.from_dataframe(df_ann_annot)
 trans_annot=trans_annot.sort()
-merge_annot = trans_annot.merge(c=4,o='distinct',s=True);
+merge_annot = trans_annot.merge(c=[4,5,6],o='distinct',s=True);
 df_merge_annot=pybedtools.BedTool.to_dataframe(merge_annot);
-df_merge_annot.columns=['chrom','start','end','strand','name'];
+df_merge_annot.columns=['chrom','start','end','name','score','strand'];
 df_merge_annot['score']=0;
 df_merge_annot=df_merge_annot[['chrom','start','end','name','score','strand']]
 df_merge_annot['name'] = df_merge_annot['name'].str.replace(',','&')
 
 pybedtools.BedTool.from_dataframe(df_merge_annot).saveas(path_out+"/union_dog_annotation.bed");
 
-print("Done, output file : %s" %(path_out+"/union_dog_annotation.bed"))
+print(("Done, output file : %s" %(path_out+"/union_dog_annotation.bed")))
 
 
 

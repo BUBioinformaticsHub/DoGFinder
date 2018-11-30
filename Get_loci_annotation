@@ -32,7 +32,7 @@ if output_path[-1]=='/'  and len(output_path)>0 :
 
 gtf_files_names=gtf_list.split(",")
 if  not(os.path.exists(output_path)):
-    print("No output directory at : ",output_path)
+    print(("No output directory at : ",output_path))
     sys.exit()
 
 if out_name is not '':
@@ -59,7 +59,7 @@ print("\n-----------------------------------------------------Get Annotation----
 df_gtf_annot= pd.DataFrame()
 for k in range(0,len(gtf_files_names)):
     if  not(os.path.isfile(gtf_files_names[k])):
-        print("No GTF file in : ",gtf_files_names[k])
+        print(("No GTF file in : ",gtf_files_names[k]))
         sys.exit()
         
     gtf_temp=pybedtools.BedTool(gtf_files_names[k]);
@@ -84,23 +84,29 @@ df_gtf_annot['transcript_id']=tmp2.str.split(r'\s*";\s*').str[0]
 df_anot_temp_min=pd.DataFrame(df_gtf_annot.groupby(['transcript_id', 'seqname', 'strand','gene_id','score'], sort=False)['start'].min()).reset_index()
 df_anot_temp_max=pd.DataFrame(df_gtf_annot.groupby(['transcript_id', 'seqname', 'strand','gene_id','score'], sort=False)['end'].max()).reset_index()
 
-df_trans_annot=pd.merge(df_anot_temp_min, df_anot_temp_max, how='inner', on=['transcript_id', 'seqname', 'strand','gene_id','score'])
+df_trans_annot=pd.merge(
+        df_anot_temp_min,
+        df_anot_temp_max,
+        how='inner',
+        on=['transcript_id', 'seqname', 'strand','gene_id','score']
+)
 
 df_trans_annot=df_trans_annot[['seqname', 'start','end','gene_id','score','strand']]
 
 trans_annot=pybedtools.BedTool.from_dataframe(df_trans_annot)
 trans_annot=trans_annot.sort()
-merge_annot = trans_annot.merge(c=4,o='distinct',s=True);
+trans_annot.saveas('trans_annot.bed')
+merge_annot = trans_annot.merge(c=[4,5,6],o='distinct',s=True);
+merge_annot.saveas('merged.bed')
 
 df_merge_annot=pybedtools.BedTool.to_dataframe(merge_annot);
 
-df_merge_annot.columns=['chrom','start','end','name'];
-df_merge_annot['score']=0;
-df_merge_annot=df_merge_annot[['chrom','start','end','name','score']]
+df_merge_annot.columns=['chrom','start','end','name','score','strand'];
+df_merge_annot=df_merge_annot[['chrom','start','end','name','score','strand']]
 df_merge_annot['name'] = df_merge_annot['name'].str.replace(',','&')
 
 path_annot_temp="%s/loci_annotation%s.bed" % (output_path,out_name) ;
 
 pybedtools.BedTool.from_dataframe(df_merge_annot).saveas(path_annot_temp);
-print("Done: output:%s \n" %(path_annot_temp))
+print(("Done: output:%s \n" %(path_annot_temp)))
 

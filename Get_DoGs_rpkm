@@ -46,38 +46,38 @@ if out_name is not '':
     out_name='_'+out_name
 
 if  not(os.path.isfile(path_annotation)):
-    print("No annotation file in : ",path_annotation)
+    print(("No annotation file in : ",path_annotation))
     sys.exit()
 
 if  not(os.path.exists(output_path)):
-    print("No output directory at : ",output_path)
+    print(("No output directory at : ",output_path))
     sys.exit()
 
 if  not(os.path.isfile(path_bam)):
-    print("No bam file in : ",path_bam)
+    print(("No bam file in : ",path_bam))
     sys.exit()
 
 print("\n-----------------------------------------------------Get DoGs RPKM-------------------------------------------------------------------------")
-print("\nPath of reads : %s "%(path_bam))
-print("DoGs annotation file: %s "%(path_annotation))
-print("Output will be at: %s/"%(output_path))
+print(("\nPath of reads : %s "%(path_bam)))
+print(("DoGs annotation file: %s "%(path_annotation)))
+print(("Output will be at: %s/"%(output_path)))
 if S:
     print("Strand specific \n")
 else:
     print("Not Strand specific \n")
 
 if  not(os.path.isfile(path_bam+".bai")):
-    print("No index file: %s ....creating one" %(path_bam+".bai"))
+    print(("No index file: %s ....creating one" %(path_bam+".bai")))
     pysam.index(path_bam)
 else :
-    print("Found index file: %s" %(path_bam+".bai"))
+    print(("Found index file: %s" %(path_bam+".bai")))
 
 print("\nCounting all mapped reads... ")
 
 
 #check bedtools version
 bed_strng=subprocess.getstatusoutput('bedtools --version')
-version=int(list(filter(str.isdigit, bed_strng[1])))
+version=int(''.join(list(filter(str.isdigit, bed_strng[1]))))
 
 #bam file with all reads:
 reads= pybedtools.BedTool(path_bam);
@@ -140,7 +140,7 @@ path_dog_annot_temp="%s/DoGs_rpkm_table%s.csv" % (output_path,out_name) ;
 
 df_all_data.to_csv(path_dog_annot_temp)
 
-print("Done, output file : %s" %(path_dog_annot_temp))
+print(("Done, output file : %s" %(path_dog_annot_temp)))
 
 
 

@@ -194,7 +194,7 @@ def PE_Mod(PE,strand,path_bam,output_path):
 		infile = pysam.AlignmentFile(path_bam, "rb")
 		sam_strng=subprocess.getstatusoutput('samtools')
 		temp=sam_strng[1].split("Version:")[1][:7]
-		sam_version=int(list(filter(str.isdigit, temp)))
+		sam_version=int(''.join(list(filter(str.isdigit, temp))))
 		if sam_version==119:
 			outfile = pysam.AlignmentFile(output_path+"/"+base_name.split(".bam")[0]+"_temp.bam", "wb", template=infile)
 		else:
@@ -250,7 +250,7 @@ def count_reads(path_bam,output_path):
 	path_new_sort=output_path+"/"+base_name.split(".bam")[0]+".sorted.bam";
 
 	if  not(os.path.isfile(path_bam+".bai")):
-	        print("No index file at : ",path_bam+".bai... Sorting and indexing...")
+	        print(("No index file at : ",path_bam+".bai... Sorting and indexing..."))
 	        pysam.sort("-O", "BAM","-T",path_temp,"-o",path_new_sort,path_bam )
 	        pysam.index(path_new_sort)
 	        path_bam=path_new_sort

@@ -1,3 +1,0 @@
-DoGs_functions
-tests
-annotations
